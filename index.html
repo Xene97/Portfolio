@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ralf Bauer | Web Developer & UI/UX Designer</title>
+    <meta name="description" content="Portfolio profesional de Ralf Bauer. Técnico en Desarrollo de Aplicaciones Web, especializado en Frontend, Backend e Inteligencia Artificial.">
+    
+    <!-- Fuentes tipográficas premium -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Variables y Reset */
+        :root {
+            --bg-color: #0a0a0a;
+            --surface-color: #171717;
+            --surface-hover: #262626;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.15);
+            --border-color: rgba(255,255,255,0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        a { text-decoration: none; color: inherit; transition: var(--transition); cursor: pointer; }
+        ul { list-style: none; }
+
+        /* Sistema SPA (Single Page Application) */
+        .page-view { display: none; }
+        .page-view.active { display: block; }
+
+        /* Navegación */
+        header {
+            position: fixed; top: 0; width: 100%; background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); z-index: 1000;
+        }
+        nav { max-width: 1200px; margin: 0 auto; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: -0.5px; cursor: pointer; }
+        .logo span { color: var(--accent-color); }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a { font-size: 0.85rem; font-weight: 500; color: var(--text-muted); }
+        .nav-links a:hover { color: var(--text-main); }
+        
+        /* Botones */
+        .btn-primary, .btn-secondary {
+            border-radius: 50px; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: var(--transition); cursor: pointer;
+        }
+        .btn-primary { background: var(--accent-color); color: #0f172a; padding: 0.6rem 1.5rem; }
+        .btn-primary:hover { box-shadow: 0 0 20px var(--accent-glow); transform: translateY(-2px); }
+        .btn-secondary { padding: 0.6rem 1.5rem; border: 1px solid var(--border-color); color: var(--text-main); font-weight: 500; }
+        .btn-secondary:hover { background: var(--surface-color); border-color: var(--text-muted); }
+
+        /* Layout Base */
+        section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 2rem; margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem; }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
+
+        /* Hero */
+        #hero { min-height: 100vh; display: flex; align-items: center; padding-top: 6rem; }
+        .hero-container { display: flex; align-items: center; gap: 4rem; width: 100%; justify-content: space-between; }
+        .hero-text { flex: 1; max-width: 650px; }
+        .hero-image { flex: 0 0 350px; display: flex; justify-content: center; }
+        .hero-image img { width: 100%; max-width: 350px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 50%; border: 4px solid var(--surface-color); box-shadow: 0 0 40px var(--accent-glow); transition: var(--transition); }
+        .hero-image img:hover { transform: scale(1.02); border-color: var(--accent-color); }
+        .hero-badge { display: inline-block; padding: 0.4rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: 50px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+        .hero-title { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; margin-bottom: 1.5rem; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-desc { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2.5rem; }
+        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+        /* Grids y Tarjetas */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        
+        .card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; transition: var(--transition); display: block; }
+        .card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 1rem; align-items: flex-start;}
+        .card-title { font-size: 1.2rem; margin-bottom: 0.3rem; }
+        .card-subtitle { color: var(--accent-color); font-size: 0.9rem; font-weight: 500; }
+        .card-date { font-size: 0.85rem; color: var(--text-muted); }
+        .card-body { color: var(--text-muted); font-size: 0.95rem; }
+        .click-indicator { font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; opacity: 0.7; }
+        .card:hover .click-indicator { color: var(--accent-color); opacity: 1; }
+
+        /* Habilidades */
+        .skills-container { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1rem; }
+        .skill-tag { background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; transition: var(--transition); }
+        .skill-tag:hover { background: var(--surface-hover); border-color: var(--accent-color); color: var(--accent-color); }
+        .skill-tag.highlight { border-color: rgba(56, 189, 248, 0.4); color: var(--text-main); }
+
+        /* Vista Detallada */
+        .breadcrumbs { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 3rem; display: flex; align-items: center; gap: 0.8rem; }
+        .breadcrumbs a { color: var(--accent-color); font-weight: 500; }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        
+        .biography-box { background: rgba(255,255,255,0.02); border-left: 4px solid var(--accent-color); padding: 2rem; border-radius: 0 12px 12px 0; font-size: 1.05rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 2rem; }
+
+        /* Galería PDF */
+        .pdf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .pdf-card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: var(--transition); display: flex; flex-direction: column; }
+        .pdf-card:hover { border-color: var(--accent-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(-5px); }
+        .pdf-preview { width: 100%; height: 180px; background: #2a2a2a; border-bottom: 1px solid var(--border-color); overflow: hidden; position: relative; }
+        .pdf-preview img { width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0.85; transition: var(--transition); }
+        .pdf-card:hover .pdf-preview img { opacity: 1; transform: scale(1.05); }
+        .pdf-content { padding: 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; flex: 1; }
+
+        /* Animaciones y Footer */
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        footer { border-top: 1px solid var(--border-color); padding: 4rem 2rem; text-align: center; }
+        .social-links { display: flex; justify-content: center; gap: 1.5rem; margin: 2rem 0; }
+        .social-links a { font-size: 1.5rem; color: var(--text-muted); background: var(--surface-color); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--border-color); }
+        .social-links a:hover { color: var(--accent-color); transform: scale(1.1); border-color: var(--accent-color); }
+        .email-display { background: rgba(255,255,255,0.05); display: inline-block; padding: 0.8rem 1.5rem; border-radius: 8px; border: 1px dashed var(--border-color); margin-top: 1rem; font-family: monospace; font-size: 1.1rem; color: var(--accent-color); }
+
+        @media (max-width: 992px) {
+            .hero-container { flex-direction: column-reverse; text-align: center; gap: 2rem; }
+            .hero-image { flex: 0 0 250px; }
+            .hero-actions { justify-content: center; }
+            .nav-links { display: none; }
+        }
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVEGACIÓN -->
+    <header>
+        <nav>
+            <div class="logo" onclick="navigateTo('inicio')">Ralf<span>Bauer</span></div>
+            <div class="nav-links">
+                <a onclick="navigateTo('inicio', 'experience')">Experiencia</a>
+                <a onclick="navigateTo('inicio', 'projects')">Proyectos</a>
+                <a onclick="navigateTo('inicio', 'education')">Formación</a>
+                <a onclick="navigateTo('inicio', 'skills')">Habilidades</a>
+                <a onclick="navigateTo('perfil-detallado')" style="color: var(--accent-color);">Sobre mí</a>
+            </div>
+            <a href="mailto:ralf.8482@gmail.com" class="btn-primary"><i class="fa-regular fa-envelope"></i> Contactar</a>
+        </nav>
+    </header>
+
+    <!-- ==========================================
+         VISTA 1: LANDING PAGE PRINCIPAL
+         ========================================== -->
+    <main id="view-inicio" class="page-view active">
+        
+        <!-- 1. HERO -->
+        <section id="hero" class="fade-in">
+            <div class="hero-container">
+                <div class="hero-text">
+                    <div class="hero-badge"><i class="fa-solid fa-code"></i> Disponible para incorporación inmediata</div>
+                    <h1 class="hero-title">Construyendo el futuro digital,<br>línea a línea.</h1>
+                    <p class="hero-desc">Soy <strong>Ralf Bauer</strong>, Técnico en Desarrollo de Aplicaciones Web enfocado en crear interfaces limpias, arquitecturas sólidas y soluciones integradas con Inteligencia Artificial. Combino visión técnica con mentalidad emprendedora y capacidad de liderazgo.</p>
+                    <div class="hero-actions">
+                        <a onclick="navigateTo('inicio', 'projects')" class="btn-primary">Ver Proyectos <i class="fa-solid fa-arrow-down"></i></a>
+                        <a href="https://linkedin.com" target="_blank" class="btn-secondary"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                        <a href="https://github.com" target="_blank" class="btn-secondary"><i class="fa-brands fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="recursos/perfil.jpg" alt="Foto de Ralf Bauer" onerror="this.src='https://via.placeholder.com/400x400/171717/38bdf8?text=Ralf+Bauer'">
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. PERFIL -->
+        <section id="about" class="fade-in">
+            <h2 class="section-title">Perfil</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3 class="card-title">Resumen Profesional</h3>
+                    <p class="card-body" style="margin-top: 1rem;">
+                        Busco mi primera experiencia profesional en el sector tecnológico aportando gran capacidad de adaptación, liderazgo y aprendizaje autónomo. Acostumbrado a asumir responsabilidades, coordinar equipos y gestionar iniciativas desde cero, mi enfoque combina la excelencia técnica con un profundo entendimiento de la organización y el usuario final.
+                    </p>
+                    <a onclick="navigateTo('perfil-detallado')" class="click-indicator" style="margin-top: 1.5rem; font-weight: 600; cursor: pointer;">
+                        Conóceme en profundidad <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Información Adicional</h3>
+                    <div class="skills-container" style="margin-top: 1rem;">
+                        <div class="skill-tag highlight"><i class="fa-solid fa-car"></i> Carnet de Conducir (B)</div>
+                        <div class="skill-tag">Español (Nativo)</div>
+                        <div class="skill-tag">Rumano (Nativo)</div>
+                        <div class="skill-tag">Valenciano (B2)</div>
+                        <div class="skill-tag">Inglés (B1)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. EXPERIENCIA -->
+        <section id="experience" class="fade-in">
+            <h2 class="section-title">Experiencia Laboral</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Gestor Comercial & Logística (Reventa Online)</h3>
+                            <div class="card-subtitle">Emprendimiento Personal - Vinted</div>
+                        </div>
+                        <div class="card-date">2025 - Presente</div>
+                    </div>
+                    <div class="card-body">
+                        <ul style="margin-top: 0.5rem; list-style-type: disc; padding-left: 1rem; line-height: 1.8;">
+                            <li>Gestión integral de proveedores y ventas a través de Vinted.</li>
+                            <li>Publicación estratégica de productos en redes sociales.</li>
+                            <li>Atención al cliente, organización logística, control de pedidos y envíos.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Auxiliar y Coordinador de Logística y Atención al Cliente</h3>
+                            <div class="card-subtitle">IKEA Alfafar (Seringlobal S.L.)</div>
+                        </div>
+                        <div class="card-date">Mar 2026 - Jul 2026</div>
+                    </div>
+                    <div class="card-body">
+                        <ul style="list-style-type: disc; padding-left: 1rem; line-height: 1.8;">
+                            <li>Coordinación y supervisión directa del equipo de trabajo, optimizando el rendimiento y los procesos logísticos.</li>
+                            <li>Apoyo logístico, gestión y organización de la flota de carros de compra en tienda y montacargas.</li>
+                            <li>Atención directa al cliente y resolución de dudas.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. PROYECTOS -->
+        <section id="projects" class="fade-in">
+            <h2 class="section-title">Proyectos Tecnológicos</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Plataforma E-commerce</h3>
+                            <div class="card-subtitle">Elite Futbol Kits (Proyecto Web)</div>
+                        </div>
+                        <div class="card-date">En Desarrollo</div>
+                    </div>
+                    <div class="card-body">
+                        <p style="margin-bottom: 0.5rem;">Diseño y desarrollo de una plataforma web propia para mi negocio de venta de camisetas de fútbol.</p>
+                        <ul style="list-style-type: disc; padding-left: 1rem; line-height: 1.8;">
+                            <li>Gestión de infraestructura, dominios y repositorio de código alojado en GitHub.</li>
+                            <li>Diseño UI/UX adaptado a la marca comercial (@elitefutbol_kits).</li>
+                        </ul>
+                        <div class="skills-container" style="margin-top: 1rem;">
+                            <div class="skill-tag"><i class="fa-solid fa-code"></i> Frontend & Backend</div>
+                            <div class="skill-tag"><i class="fa-brands fa-github"></i> GitHub</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Espacio reservado para futuros proyectos -->
+                <div class="card" style="display: flex; align-items: center; justify-content: center; text-align: center; border-style: dashed; background: transparent;">
+                    <div style="color: var(--text-muted);">
+                        <i class="fa-solid fa-laptop-code" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <p>Nuevos proyectos en fase de desarrollo...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. FORMACIÓN ACADÉMICA -->
+        <section id="education" class="fade-in">
+            <h2 class="section-title">Formación Académica</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">2º Grado Superior en Desarrollo de Aplicaciones Web (DAW)</h3>
+                            <div class="card-subtitle">IES Abastos, Valencia</div>
+                        </div>
+                        <div class="card-date">2025 - Actualmente</div>
+                    </div>
+                    <div class="card-body">Formación especializada en arquitecturas web, despliegues en servidores, bases de datos y lenguajes de programación frontend/backend.</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Bachillerato Científico-Tecnológico</h3>
+                            <div class="card-subtitle">IES 25 d'Abril, Alfafar</div>
+                        </div>
+                        <div class="card-date">2023 - 2025</div>
+                    </div>
+                    <div class="card-body">Sólida base analítica, rigor científico y desarrollo del pensamiento lógico y matemático aplicado a la resolución de problemas complejos.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. HABILIDADES -->
+        <section id="skills" class="fade-in">
+            <h2 class="section-title">Stack Tecnológico & Habilidades</h2>
+            <div class="card">
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">Conjunto de tecnologías, lenguajes y herramientas que manejo en mis desarrollos diarios.</p>
+                <div class="skills-container">
+                    <div class="skill-tag"><i class="fa-brands fa-html5"></i> HTML5</div>
+                    <div class="skill-tag"><i class="fa-brands fa-css3-alt"></i> CSS3</div>
+                    <div class="skill-tag"><i class="fa-brands fa-js"></i> JavaScript</div>
+                    <div class="skill-tag"><i class="fa-brands fa-java"></i> Java</div>
+                    <div class="skill-tag"><i class="fa-brands fa-php"></i> PHP</div>
+                    <div class="skill-tag"><i class="fa-solid fa-database"></i> Bases de Datos SQL</div>
+                    <div class="skill-tag"><i class="fa-brands fa-aws"></i> AWS Cloud</div>
+                    <div class="skill-tag"><i class="fa-brands fa-docker"></i> Docker</div>
+                    <div class="skill-tag"><i class="fa-brands fa-git-alt"></i> Git & GitHub</div>
+                    <div class="skill-tag"><i class="fa-solid fa-pen-nib"></i> Diseño UI/UX (Penpot)</div>
+                    <div class="skill-tag"><i class="fa-brands fa-linux"></i> Linux / Windows</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. CERTIFICACIONES -->
+        <section id="certifications" class="fade-in">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;">
+                <h2 class="section-title" style="margin-bottom: 0; border: none;">Certificaciones Destacadas</h2>
+            </div>
+            
+            <div class="grid-3">
+                <a onclick="navigateTo('perfil-detallado', 'galeria-certificados')" class="card">
+                    <h3 class="card-title">Iniciación al Desarrollo con IA</h3>
+                    <div class="card-subtitle">mouredev & BIG school</div>
+                    <div class="card-date">Octubre 2026</div>
+                    <div class="click-indicator"><i class="fa-solid fa-folder-open"></i> Abrir en galería</div>
+                </a>
+                <a onclick="navigateTo('perfil-detallado', 'galeria-certificados')" class="card">
+                    <h3 class="card-title">Hacking Ético</h3>
+                    <div class="card-subtitle">BIG school</div>
+                    <div class="card-date">Octubre 2026</div>
+                    <div class="click-indicator"><i class="fa-solid fa-folder-open"></i> Abrir en galería</div>
+                </a>
+                <a onclick="navigateTo('perfil-detallado', 'galeria-certificados')" class="card">
+                    <h3 class="card-title">Marketing Digital con IA</h3>
+                    <div class="card-subtitle">BIG school</div>
+                    <div class="card-date">Octubre 2026</div>
+                    <div class="click-indicator"><i class="fa-solid fa-folder-open"></i> Abrir en galería</div>
+                </a>
+                <a onclick="navigateTo('perfil-detallado', 'galeria-certificados')" class="card">
+                    <h3 class="card-title">PRL: Riesgos y Medidas Preventivas</h3>
+                    <div class="card-subtitle">Vitaly</div>
+                    <div class="card-date">Marzo 2026</div>
+                    <div class="click-indicator"><i class="fa-solid fa-folder-open"></i> Abrir en galería</div>
+                </a>
+                <a onclick="navigateTo('perfil-detallado', 'galeria-certificados')" class="card">
+                    <h3 class="card-title">PRL: Formación Específica</h3>
+                    <div class="card-subtitle">Vitaly</div>
+                    <div class="card-date">Marzo 2026</div>
+                    <div class="click-indicator"><i class="fa-solid fa-folder-open"></i> Abrir en galería</div>
+                </a>
+                <a onclick="navigateTo('perfil-detallado', 'galeria-certificados')" class="card">
+                    <h3 class="card-title">Manipulador de Alimentos</h3>
+                    <div class="card-subtitle">Formalimentaria</div>
+                    <div class="card-date">Noviembre 2025</div>
+                    <div class="click-indicator"><i class="fa-solid fa-folder-open"></i> Abrir en galería</div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- ==========================================
+         VISTA 2: SOBRE MÍ & CERTIFICADOS
+         ========================================== -->
+    <main id="view-perfil-detallado" class="page-view">
+        <section style="padding-top: 8rem;" class="fade-in">
+            
+            <!-- Breadcrumbs -->
+            <div class="breadcrumbs">
+                <a onclick="navigateTo('inicio')"><i class="fa-solid fa-house"></i> Inicio</a> 
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; margin: 0 0.5rem;"></i> 
+                <span>Sobre mí & Certificaciones</span>
+            </div>
+
+            <!-- Sobre mí Extendido -->
+            <h2 class="section-title">Sobre mí</h2>
+            <div class="biography-box">
+                <p style="margin-bottom: 1rem;">
+                    <strong>¡Hola! Soy Ralf, un desarrollador en constante evolución con mentalidad emprendedora y dotes de liderazgo.</strong>
+                </p>
+                <p style="margin-bottom: 1rem;">
+                    Actualmente me encuentro inmerso en el Desarrollo de Aplicaciones Web, buscando mi primera experiencia profesional en el sector tecnológico. Mi objetivo es unirme a un entorno laboral dinámico donde pueda aportar mi compromiso, aplicar mis conocimientos técnicos y consolidar mi trayectoria profesional aportando valor desde el primer día.
+                </p>
+                <p style="margin-bottom: 1rem;">
+                    Me fascina la intersección entre el código y las nuevas tecnologías. Disfruto creando proyectos y páginas web impulsadas por Inteligencia Artificial (¡este mismo portfolio es un ejemplo de ello!), explorando continuamente cómo la IA puede optimizar el desarrollo moderno.
+                </p>
+                <p style="margin-bottom: 1rem;">
+                    Más allá del código, tengo un fuerte espíritu empresarial. Desde hace dos años dirijo mi propio proyecto, <em>Elite Futbol Kits</em>, gestionando la venta online a través de Instagram y Vinted, la atención al cliente y la logística de envíos. Actualmente, estoy desarrollando la plataforma web oficial de este proyecto, cuyo código puedes visitar en mi GitHub. Esta iniciativa, unida a mi experiencia coordinando equipos y gestionando personal en IKEA, me ha dotado de sólidas habilidades de liderazgo, resolución de problemas, empatía con el usuario final y una gran adaptabilidad ante entornos dinámicos.
+                </p>
+                <p style="margin-bottom: 1rem;">
+                    Mi camino académico, comenzando con una sólida base analítica en el Bachillerato Científico-Tecnológico, me ha enseñado el valor de la perseverancia. La transición hacia el desarrollo de software supuso un reto metodológico importante, pero logré adaptarme, cogerle el ritmo a la lógica de programación y descubrir en ella una verdadera vocación profesional.
+                </p>
+                <p>
+                    En lo personal, soy un gran aficionado al deporte y a los videojuegos. El deporte me aporta disciplina y capacidad de esfuerzo, mientras que los videojuegos mantienen viva mi curiosidad por los entornos digitales interactivos. ¡Siempre estoy listo para el siguiente reto!
+                </p>
+            </div>
+        </section>
+
+        <!-- Galería de Certificados -->
+        <section id="galeria-certificados" class="fade-in" style="padding-top: 2rem;">
+            <h2 class="section-title">Galería de Certificados Oficiales</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Documentación acreditativa de mis conocimientos técnicos y formación complementaria. Haz clic en "Abrir Documento" para descargar el PDF original.</p>
+            
+            <div class="pdf-grid">
+                
+                <div class="pdf-card">
+                    <div class="pdf-preview">
+                        <img src="recursos/preview-ia.jpg" alt="Vista previa IA" onerror="this.src='https://via.placeholder.com/400x300/171717/38bdf8?text=Vista+Previa'">
+                    </div>
+                    <div class="pdf-content">
+                        <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Iniciación al Desarrollo con IA</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">mouredev & BIG school</p>
+                        <a href="recursos/cert-ia.pdf" target="_blank" class="btn-secondary" style="font-size: 0.85rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Documento</a>
+                    </div>
+                </div>
+
+                <div class="pdf-card">
+                    <div class="pdf-preview">
+                        <img src="recursos/preview-hacking.jpg" alt="Vista previa Hacking" onerror="this.src='https://via.placeholder.com/400x300/171717/38bdf8?text=Vista+Previa'">
+                    </div>
+                    <div class="pdf-content">
+                        <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Hacking Ético</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">BIG school</p>
+                        <a href="recursos/cert-hacking.pdf" target="_blank" class="btn-secondary" style="font-size: 0.85rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Documento</a>
+                    </div>
+                </div>
+
+                <div class="pdf-card">
+                    <div class="pdf-preview">
+                        <img src="recursos/preview-marketing.jpg" alt="Vista previa Marketing" onerror="this.src='https://via.placeholder.com/400x300/171717/38bdf8?text=Vista+Previa'">
+                    </div>
+                    <div class="pdf-content">
+                        <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Marketing Digital con IA</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">BIG school</p>
+                        <a href="recursos/cert-marketing.pdf" target="_blank" class="btn-secondary" style="font-size: 0.85rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Documento</a>
+                    </div>
+                </div>
+
+                <div class="pdf-card">
+                    <div class="pdf-preview">
+                        <img src="recursos/preview-prevencion-1.jpg" alt="Vista previa Prevención 1" onerror="this.src='https://via.placeholder.com/400x300/171717/38bdf8?text=Vista+Previa'">
+                    </div>
+                    <div class="pdf-content">
+                        <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">PRL: Riesgos y Medidas Preventivas</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Vitaly Health Services</p>
+                        <a href="recursos/cert-prevencion-1.pdf" target="_blank" class="btn-secondary" style="font-size: 0.85rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Documento</a>
+                    </div>
+                </div>
+
+                <div class="pdf-card">
+                    <div class="pdf-preview">
+                        <img src="recursos/preview-prevencion-3.jpg" alt="Vista previa Prevención 3" onerror="this.src='https://via.placeholder.com/400x300/171717/38bdf8?text=Vista+Previa'">
+                    </div>
+                    <div class="pdf-content">
+                        <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">PRL: Formación Específica</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Vitaly Health Services</p>
+                        <a href="recursos/cert-prevencion-3.pdf" target="_blank" class="btn-secondary" style="font-size: 0.85rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Documento</a>
+                    </div>
+                </div>
+
+                <div class="pdf-card">
+                    <div class="pdf-preview">
+                        <img src="recursos/preview-alimentos.jpg" alt="Vista previa Alimentos" onerror="this.src='https://via.placeholder.com/400x300/171717/38bdf8?text=Vista+Previa'">
+                    </div>
+                    <div class="pdf-content">
+                        <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Manipulador de Alimentos</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Formalimentaria</p>
+                        <a href="recursos/cert-alimentos.pdf" target="_blank" class="btn-secondary" style="font-size: 0.85rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Documento</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer / Contacto -->
+    <footer id="contact" class="fade-in">
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;">¿Hablamos?</h2>
+        <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto;">Estoy disponible para nuevas oportunidades profesionales y abierto a incorporarme de manera inmediata en tu equipo.</p>
+        
+        <div class="social-links">
+            <a href="mailto:ralf.8482@gmail.com" title="Enviar Email"><i class="fa-solid fa-envelope"></i></a>
+            <a href="https://linkedin.com" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://github.com" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="tel:+34610810589" title="Llamar por Teléfono"><i class="fa-solid fa-phone"></i></a>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+            <p style="font-size: 0.9rem; color: var(--text-muted);">Si tu gestor de correo no se abre automáticamente, escríbeme a:</p>
+            <div class="email-display">ralf.8482@gmail.com</div>
+        </div>
+        
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+            📍 Plaza Poeta Miguel Hernández, 9, 46910 Alfafar (Valencia)
+        </p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2rem;">
+            &copy; 2026 Ralf Bauer. Diseñado y desarrollado con código propio.
+        </p>
+    </footer>
+
+    <!-- Scripts SPA y animaciones -->
+    <script>
+        function navigateTo(viewId, targetAnchor = null) {
+            document.querySelectorAll('.page-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            const targetView = document.getElementById('view-' + viewId);
+            if(targetView) {
+                targetView.classList.add('active');
+            }
+            if (targetAnchor) {
+                setTimeout(() => {
+                    const element = document.getElementById(targetAnchor);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            reiniciarAnimaciones();
+        }
+
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+        let observer = crearObserver();
+
+        function crearObserver() {
+            return new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+        }
+
+        function reiniciarAnimaciones() {
+            if(observer) observer.disconnect();
+            observer = crearObserver();
+            document.querySelectorAll('.page-view.active .fade-in').forEach(element => {
+                element.classList.remove('visible');
+                observer.observe(element);
+            });
+            const footer = document.getElementById('contact');
+            if(footer) {
+                footer.classList.remove('visible');
+                observer.observe(footer);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', reiniciarAnimaciones);
+    </script>
+</body>
+</html>
